@@ -136,9 +136,36 @@ const updateMeal = (req, res) => {
   );
 };
 
+/* ================================
+   GET ALL MEALS
+   Used for Insights/Analytics
+================================ */
+const getAllMeals = (req, res) => {
+  const sql = `
+    SELECT 
+      id,
+      meal_name,
+      meal_type,
+      DATE(meal_date) AS meal_date,
+      calories,
+      isVeg
+    FROM planned_meals
+    ORDER BY meal_date DESC
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching all meals:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
+    res.status(200).json(results);
+  });
+};
+
 module.exports = {
   addMeal,
   getMealsByDate,
+  getAllMeals,
   deleteMeal,
   updateMeal,
 };
